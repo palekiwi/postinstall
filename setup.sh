@@ -8,8 +8,10 @@ echo
 echo "Installing packages"
 
 PKGS=(
-    'pass'
     'gnupg'
+    'pam-u2f'
+    'pass'
+    'wget'
     'yubikey-manager'
     'zsh'
     'zsh-completions'
@@ -50,6 +52,7 @@ ln -fs ~/postinstall/gitconfig ~/.gitconfig
 echo
 echo "GPG Config"
 
+mkdir ~/.gnupg
 cd ~/.gnupg
 ## Download config
 wget https://raw.githubusercontent.com/drduh/config/master/gpg-agent.conf
@@ -65,8 +68,21 @@ echo "Enabling PC/SC Smart Card Daemon"
 sudo systemctl enable pcscd.service
 sudo systemctl start pcscd.service
 
+# ------------------------------------------------------------------------
 
-## Update gpg-agent
+echo
+echo "Export public ssh key"
+
+gpg --export-ssh-key pawel.lisewski@tuta.io > ~/.ssh/id_rsa.pub
+
+# ------------------------------------------------------------------------
+
+echo
+echo "GPG Config"
+
+echo
+echo "Updating GPG Agent"
+
 gpg-connect-agent updatestartuptty /bye
 
 # ------------------------------------------------------------------------
