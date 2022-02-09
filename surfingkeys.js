@@ -1,3 +1,5 @@
+const { addSearchAlias, map, mapkey, vmap } = api;
+
 // direction arrows
 vmap("<ArrowLeft>", "h");
 vmap("<ArrowDown>", "j");
@@ -98,7 +100,7 @@ const searchEngines = [
 ];
 
 searchEngines.forEach((x) => {
-  addSearchAliasX(x.key, x.name, x.url, "s", x.fn);
+  addSearchAlias(x.key, x.name, x.url, "s", x.fn);
 
   mapkey(`o${x.key}`, `Search with ${x.name}`, function () {
     Front.openOmnibar({ type: "SearchEngine", extra: x.key });
