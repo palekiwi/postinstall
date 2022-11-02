@@ -15,12 +15,9 @@ stty -ixon
 # time that oh-my-zsh is loaded.
 ZSH_THEME="avit"
 
-# syntax highlighting
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
 autoload -Uz compinit
 compinit
-plugins=(zsh-autosuggestions git pass)
+plugins=(zsh-syntax-highlighting zsh-autosuggestions git pass)
 
 # User configuration
 
