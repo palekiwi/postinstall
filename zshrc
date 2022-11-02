@@ -23,6 +23,8 @@ plugins=(zsh-syntax-highlighting zsh-autosuggestions git pass)
 
 source $ZSH/oh-my-zsh.sh
 
+source ~/.aliases
+
 # ssh authentication with gpg
 export GPG_TTY="$(tty)"
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)

@@ -6,20 +6,6 @@ echo
 # ------------------------------------------------------------------------
 
 echo
-echo "Installing packages"
-
-PKGS=(
-    'zsh'
-)
-
-for PKG in "${PKGS[@]}"; do
-    echo "INSTALLING: ${PKG}"
-    sudo apt install -y "$PKG"
-done
-
-# ------------------------------------------------------------------------
-
-echo
 echo "INSTALLING OH-MY-ZSH"
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -31,7 +17,7 @@ echo "INSTALLING PLUGINS"
 
 # autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
- 
+
 # syntax highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
