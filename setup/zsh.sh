@@ -42,6 +42,7 @@ echo "LINKING DOTFILES"
 rm -rf ~/.zshrc > /dev/null 2>&1
 rm -rf ~/.aliases > /dev/null 2>&1
 
+ln -fs ~/postinstall/zshrc ~/.zshrc
 ln -fs ~/postinstall/aliases ~/.aliases
 
 # ------------------------------------------------------------------------
