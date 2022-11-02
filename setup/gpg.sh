@@ -1,79 +1,89 @@
+#!/bin/bash
+
 echo
 echo "SETUP"
+echo "INSTALLING GPG"
 echo
 
 # ------------------------------------------------------------------------
 
 echo
-echo "Installing packages"
+echo "Installing apt packages"
 
 PKGS=(
-    'gnupg'
-    'pam-u2f'
+    'gnupg2'
+    'gnupg-agent'
+    'scdaemon'
+    'pcscd'
     'pass'
-    'wget'
-    'yubikey-manager'
-    'zsh'
-    'zsh-completions'
-    'zsh-syntax-highlighting'
+    'python3-pip'
+    'python3-pyscard'
+    'yubikey-personalization'
 )
 
 for PKG in "${PKGS[@]}"; do
     echo "INSTALLING: ${PKG}"
-    sudo pacman -S "$PKG" --noconfirm --needed
+    sudo apt install -y "$PKG"
 done
 
-# ------------------------------------------------------------------------
-
 echo
-echo "INSTALLING OH-MY-ZSH"
+echo "Installing python"
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+PKGS=(
+    'PyOpenSSL'
+    'yubikey-manager'
+)
 
-# ------------------------------------------------------------------------
-
-echo
-echo "INSTALLING AUTOSUGGESTIONS"
-
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
-# ------------------------------------------------------------------------
-
-echo
-echo "LINKING DOTFILES"
-rm -rf ~/.zshrc > /dev/null 2>&1
-rm -rf ~/.gitconfig > /dev/null 2>&1
-
-ln -fs ~/postinstall/zshrc ~/.zshrc
-ln -fs ~/postinstall/gitconfig ~/.gitconfig
+for PKG in "${PKGS[@]}"; do
+    echo "INSTALLING: ${PKG}"
+    pip3 install "$PKG"
+done
 
 # ------------------------------------------------------------------------
 
 echo
 echo "GPG Config"
 
-mkdir ~/.gnupg
-cd ~/.gnupg
+gpgdir=~/.gnupg
+
+[[ -e $gpgdir ]] &&  rm -rf $gpgdir
+mkdir $gpgdir
+
+find $gpgdir -type f -exec chmod 600 {} \;
+find $gpgdir -type d -exec chmod 700 {} \;
+
+cd $gpgdir
 ## Download config
 wget https://raw.githubusercontent.com/drduh/config/master/gpg-agent.conf
 
 ## Import public key
-gpg --search-key pawel.lisewski@tuta.io
+gpg --keyserver keyserver.ubuntu.com --search-key pawel.lisewski@tuta.io
 
-# ------------------------------------------------------------------------
+## Edit key trust
+gpg --edit-key pawel.lisewski@tuta.io
 
-echo
-echo "Enabling PC/SC Smart Card Daemon"
-
-sudo systemctl enable pcscd.service
-sudo systemctl start pcscd.service
+gpg -k
 
 # ------------------------------------------------------------------------
 
 echo
 echo "Export public ssh key"
 
+sshdir=~/.ssh
+
+[[ -e $sshdir ]] &&  rm -rf $sshdir
+mkdir $sshdir
+
 gpg --export-ssh-key pawel.lisewski@tuta.io > ~/.ssh/id_rsa.pub
+
+# ------------------------------------------------------------------------
+
+echo
+echo "Enabling PC/SC Smart Card Daemon"
+
+sudo systemctl enable --now pcscd.service
+
+~/.local/bin/ykman info
 
 # ------------------------------------------------------------------------
 
