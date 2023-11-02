@@ -1,4 +1,4 @@
-const { addSearchAlias, map, mapkey, vmap } = api;
+const { addSearchAlias, map, mapkey, vmap, Front } = api;
 
 // direction arrows
 vmap("<ArrowLeft>", "h");
